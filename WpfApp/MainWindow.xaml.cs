@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Globalization;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -174,20 +175,24 @@ public partial class MainWindow : Window
             {
                 case "+":
                 {
-                    return decimal.Parse(ifade[0]) + decimal.Parse(ifade[2]);
+                    return decimal.Parse(ifade[0], CultureInfo.InvariantCulture) 
+                           + decimal.Parse(ifade[2], CultureInfo.InvariantCulture);
                 }
                 case "-":
                 {
-                    return decimal.Parse(ifade[0]) - decimal.Parse(ifade[2]);
+                    return decimal.Parse(ifade[0], CultureInfo.InvariantCulture) 
+                           - decimal.Parse(ifade[2], CultureInfo.InvariantCulture);
                 }
                 case "×":
                 {
-                    return decimal.Parse(ifade[0]) * decimal.Parse(ifade[2]);
+                    return decimal.Parse(ifade[0], CultureInfo.InvariantCulture) 
+                           * decimal.Parse(ifade[2], CultureInfo.InvariantCulture);
                 }
                 case "÷":
                 {
-                    if(int.Parse(ifade[2]) != 0)
-                        return decimal.Parse(ifade[0]) / decimal.Parse(ifade[2]);
+                    if(int.Parse(ifade[2], CultureInfo.InvariantCulture) != 0)
+                        return decimal.Parse(ifade[0], CultureInfo.InvariantCulture) 
+                               / decimal.Parse(ifade[2], CultureInfo.InvariantCulture);
                     return 0;
                 }
                 default:
