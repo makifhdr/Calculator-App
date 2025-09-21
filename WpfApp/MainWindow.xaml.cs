@@ -190,7 +190,7 @@ public partial class MainWindow : Window
                 }
                 case "÷":
                 {
-                    if(int.Parse(ifade[2], CultureInfo.InvariantCulture) != 0)
+                    if(decimal.Parse(ifade[2], CultureInfo.InvariantCulture) != 0)
                         return decimal.Parse(ifade[0], CultureInfo.InvariantCulture) 
                                / decimal.Parse(ifade[2], CultureInfo.InvariantCulture);
                     return 0;
