@@ -1,6 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
+	<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
+	<PublishSingleFile>true</PublishSingleFile>
+  	<PublishTrimmed>false</PublishTrimmed>
+  	<SelfContained>true</SelfContained>
         <OutputType>WinExe</OutputType>
         <TargetFramework>net9.0-windows</TargetFramework>
         <Nullable>enable</Nullable>

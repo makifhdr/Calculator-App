@@ -166,7 +166,7 @@ public partial class MainWindow : Window
         }
     }
 
-    private decimal  GetResult(string[] ifade)
+    private decimal GetResult(string[] ifade)
     {
         if (ifade.Length != 0)
         {
@@ -174,19 +174,21 @@ public partial class MainWindow : Window
             {
                 case "+":
                 {
-                    return decimal .Parse(ifade[0]) + decimal .Parse(ifade[2]);
+                    return decimal.Parse(ifade[0]) + decimal.Parse(ifade[2]);
                 }
                 case "-":
                 {
-                    return decimal .Parse(ifade[0]) - decimal .Parse(ifade[2]);
+                    return decimal.Parse(ifade[0]) - decimal.Parse(ifade[2]);
                 }
                 case "×":
                 {
-                    return decimal .Parse(ifade[0]) * decimal .Parse(ifade[2]);
+                    return decimal.Parse(ifade[0]) * decimal.Parse(ifade[2]);
                 }
                 case "÷":
                 {
-                    return decimal .Parse(ifade[0]) / decimal .Parse(ifade[2]);
+                    if(int.Parse(ifade[2]) != 0)
+                        return decimal.Parse(ifade[0]) / decimal.Parse(ifade[2]);
+                    return 0;
                 }
                 default:
                     return 0;
