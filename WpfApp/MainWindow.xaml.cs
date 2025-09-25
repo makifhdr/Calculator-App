@@ -6,14 +6,14 @@ using System.Windows.Input;
 
 namespace WpfApp;
 
-public partial class MainWindow : Window
+public partial class MainWindow
 {
     public MainWindow()
     {
         InitializeComponent();
     }
     
-    private string[] ifadeDonusum(string ifade)
+    private string[] IfadeDonusum(string ifade)
     {
         List<String> characters = new List<string>();
         string buffer = "";
@@ -43,6 +43,11 @@ public partial class MainWindow : Window
 
         return characters.ToArray();
     }
+
+    private void CloseWindow(object sender, RoutedEventArgs e)
+    {
+        Close();
+    }
     
     private void UserControl_Loaded(object sender, RoutedEventArgs e)
     {
@@ -52,11 +57,11 @@ public partial class MainWindow : Window
     
     private void Key_Pressed(object sender, KeyEventArgs e)
     {
-        if (e.Key >= Key.NumPad0 && e.Key <= Key.NumPad9)
+        if (e.Key is >= Key.NumPad0 and <= Key.NumPad9)
         {
             ResultText.Text += e.Key - Key.NumPad0;
         }
-        else if (e.Key >= Key.D0 && e.Key <= Key.D9)
+        else if (e.Key is >= Key.D0 and <= Key.D9)
         {
             ResultText.Text += e.Key - Key.D0;
         }
@@ -77,7 +82,7 @@ public partial class MainWindow : Window
                 }
                 case Key.Enter:
                 {
-                    ResultText.Text = GetResult(ifadeDonusum(ResultText.Text)).ToString("G").Replace('.', ',');;
+                    ResultText.Text = GetResult(IfadeDonusum(ResultText.Text)).ToString("G").Replace('.', ',');
                     break;
                 }
             }
@@ -95,17 +100,17 @@ public partial class MainWindow : Window
         ResultText.Text = "";
     }
     
-    private bool equalClicked = false;
+    private bool equalClicked;
     
-    private List<String> operands = new List<String> {"+","-","÷","×"};
+    private readonly List<String> operands = ["+", "-", "÷", "×"];
     private void Number_Button_Click(object sender, RoutedEventArgs e)
     {
         Button button = sender as Button ?? throw new InvalidOperationException();
 
-        if ((equalClicked && !operands.Any(item => ifadeDonusum(ResultText.Text).Contains(item))) 
+        if ((equalClicked && !operands.Any(item => IfadeDonusum(ResultText.Text).Contains(item))) 
             || (ResultText.Text.Equals("0") && !button.Content.Equals(",")))
         {
-            ResultText.Text = button.Content.ToString();
+            ResultText.Text = button.Content.ToString() ?? string.Empty;
             equalClicked = false;
         }
         else 
@@ -118,18 +123,9 @@ public partial class MainWindow : Window
     {
         if(ResultText.Text != "")
         {
-            Button button = sender as Button ?? throw new InvalidOperationException();
+            string[] ifade = IfadeDonusum(ResultText.Text);
 
-            string[] ifade = ifadeDonusum(ResultText.Text);
-
-            if (ifade.Length > 2)
-            {
-                ResultText.Text = GetResult(ifadeDonusum(ResultText.Text)).ToString("G").Replace('.', ',');
-            }
-            else
-            {
-                ResultText.Text = ifade[0];
-            }
+            ResultText.Text = ifade.Length > 2 ? GetResult(IfadeDonusum(ResultText.Text)).ToString("G").Replace('.', ',') : ifade[0];
 
             equalClicked = true;
         }
@@ -140,19 +136,20 @@ public partial class MainWindow : Window
         {
             Button button = sender as Button ?? throw new InvalidOperationException();
 
-            string[] ifadeDizi = ifadeDonusum(ResultText.Text);
+            string[] ifadeDizi = IfadeDonusum(ResultText.Text);
 
         
             if (operands.Any(item => ifadeDizi.Contains(item)) && !ifadeDizi.First().Equals("-"))
             {
                 if (ifadeDizi.Length > 2)
                 {
-                    ResultText.Text = GetResult(ifadeDizi).ToString("G").Replace('.', ',') + button.Content.ToString();
+                    ResultText.Text = GetResult(ifadeDizi).ToString("G").Replace('.', ',') + button.Content;
                 }
                 else
                 {
                     ResultText.Text = ifadeDizi[0] + button.Content;
-                    equalClicked = false;
+                    if(equalClicked)
+                        equalClicked = false;
                 }
             }
             else if (ifadeDizi.First().Last().Equals('.'))
@@ -169,37 +166,33 @@ public partial class MainWindow : Window
 
     private decimal GetResult(string[] ifade)
     {
-        if (ifade.Length != 0)
+        if (ifade.Length == 0) return 0;
+        switch (ifade[1])
         {
-            switch (ifade[1])
+            case "+":
             {
-                case "+":
-                {
-                    return decimal.Parse(ifade[0], CultureInfo.InvariantCulture) 
-                           + decimal.Parse(ifade[2], CultureInfo.InvariantCulture);
-                }
-                case "-":
-                {
-                    return decimal.Parse(ifade[0], CultureInfo.InvariantCulture) 
-                           - decimal.Parse(ifade[2], CultureInfo.InvariantCulture);
-                }
-                case "×":
-                {
-                    return decimal.Parse(ifade[0], CultureInfo.InvariantCulture) 
-                           * decimal.Parse(ifade[2], CultureInfo.InvariantCulture);
-                }
-                case "÷":
-                {
-                    if(decimal.Parse(ifade[2], CultureInfo.InvariantCulture) != 0)
-                        return decimal.Parse(ifade[0], CultureInfo.InvariantCulture) 
-                               / decimal.Parse(ifade[2], CultureInfo.InvariantCulture);
-                    return 0;
-                }
-                default:
-                    return 0;
+                return decimal.Parse(ifade[0], CultureInfo.InvariantCulture) 
+                       + decimal.Parse(ifade[2], CultureInfo.InvariantCulture);
             }
+            case "-":
+            {
+                return decimal.Parse(ifade[0], CultureInfo.InvariantCulture) 
+                       - decimal.Parse(ifade[2], CultureInfo.InvariantCulture);
+            }
+            case "×":
+            {
+                return decimal.Parse(ifade[0], CultureInfo.InvariantCulture) 
+                       * decimal.Parse(ifade[2], CultureInfo.InvariantCulture);
+            }
+            case "÷":
+            {
+                if(decimal.Parse(ifade[2], CultureInfo.InvariantCulture) != 0)
+                    return decimal.Parse(ifade[0], CultureInfo.InvariantCulture) 
+                           / decimal.Parse(ifade[2], CultureInfo.InvariantCulture);
+                return 0;
+            }
+            default:
+                return 0;
         }
-
-        return 0;
     }
 }

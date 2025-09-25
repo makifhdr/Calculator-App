@@ -35,5 +35,6 @@
             <Button Content="+" Click="Operator_Button_Click" FontSize="30"/>
         </UniformGrid>
     </StackPanel>
+        <Button Content="CLOSE" Click="CloseWindow" Width="200" FontSize="30"/>
     </StackPanel>
 </Window>
